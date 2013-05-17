@@ -1,7 +1,7 @@
 
 # queue
 
-  Task (function) queue that doens't drop jobs.
+  Task (function) queue with concurrency / timeout control.
 
 ## Installation
 
