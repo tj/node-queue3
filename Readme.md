@@ -13,7 +13,7 @@
 
 var request = require('superagent');
 var Queue = require('queue3');
-var q = new Queue({ concurrency: 3 });
+var q = new Queue({ concurrency: 3, timeout: 3000 });
 
 var urls = [
   'http://google.com',

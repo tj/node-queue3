@@ -34,7 +34,7 @@ describe('Queue#push(fn)', function(){
   })
 
   it('should support .concurrency', function(done){
-    var q = new Queue({ concurrency: 5 });
+    var q = new Queue({ concurrency: 5, timeout: 2000 });
     var calls = [];
 
     q.push(function(fn){

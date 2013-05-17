@@ -16,6 +16,7 @@ module.exports = Queue;
  * Initialize a `Queue` with the given options:
  *
  *  - `concurrency` [1]
+ *  - `timeout` [0]
  *
  * @param {Object} options
  * @api public
@@ -23,9 +24,12 @@ module.exports = Queue;
 
 function Queue(options) {
   options = options || {};
+  this.timeout = options.timeout || 0;
   this.concurrency = options.concurrency || 1;
   this.pending = 0;
   this.jobs = [];
+  debug('timeout %s', this.timeout);
+  debug('concurrency %s', this.concurrency);
 }
 
 /**
@@ -81,12 +85,27 @@ Queue.prototype.run = function(){
  */
 
 Queue.prototype.exec = function(job){
+  var timeout = this.timeout;
   var self = this;
+  var done;
+
   debug('process');
   this.pending++;
   var fn = job[0];
   var cb = job[1];
+
+  if (timeout) {
+    var id = setTimeout(function(){
+      done = true;
+      var err = new Error('Timeout of ' + timeout + 'ms exceeded');
+      err.timeout = timeout;
+      cb && cb(err);
+    }, timeout);
+  }
+
   fn(function(err, res){
+    if (done) return;
+    if (timeout) clearTimeout(id);
     cb && cb(err, res);
     self.pending--;
     self.run();
