@@ -1,0 +1,12 @@
+{
+  "name": "queue3",
+  "version": "0.0.1",
+  "devDependencies": {
+    "should": "~1.2.2",
+    "mocha": "~1.9.0",
+    "superagent": "~0.14.2"
+  },
+  "dependencies": {
+    "debug": "~0.7.2"
+  }
+}
