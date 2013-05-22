@@ -59,6 +59,8 @@ Queue.prototype.__defineGetter__('length', function(){
 
 Queue.prototype.push = function(fn, cb){
   debug('enqueue');
+  var ms = this.timeout;
+  if (ms) fn = timeout(fn, ms);
   this.jobs.push([fn, cb]);
   process.nextTick(this.run.bind(this));
 };
@@ -85,31 +87,44 @@ Queue.prototype.run = function(){
  */
 
 Queue.prototype.exec = function(job){
-  var timeout = this.timeout;
   var self = this;
-  var done;
 
   debug('process');
-  this.pending++;
   var fn = job[0];
   var cb = job[1];
 
-  if (timeout) {
-    var id = setTimeout(function(){
-      done = true;
-      var err = new Error('Timeout of ' + timeout + 'ms exceeded');
-      err.timeout = timeout;
-      cb && cb(err);
-      self.pending--;
-      self.run();
-    }, timeout);
-  }
-
+  this.pending++;
   fn(function(err, res){
-    if (done) return;
-    if (timeout) clearTimeout(id);
     cb && cb(err, res);
     self.pending--;
     self.run();
   });
 };
+
+/**
+ * Decorate `fn` with a timeout of `ms`.
+ *
+ * @param {Function} fn
+ * @param {Function} ms
+ * @return {Function}
+ * @api private
+ */
+
+function timeout(fn, ms) {
+  return function(cb){
+    var done;
+
+    var id = setTimeout(function(){
+      done = true;
+      var err = new Error('Timeout of ' + ms + 'ms exceeded');
+      err.timeout = timeout;
+      cb(err);
+    }, ms);
+
+    fn(function(err, res){
+      if (done) return;
+      clearTimeout(id);
+      cb(err, res);
+    });
+  }
+}
