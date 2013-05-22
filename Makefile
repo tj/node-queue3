@@ -12,6 +12,7 @@ test:
 	@./node_modules/.bin/mocha \
 		--require should \
 		--reporter spec \
-		--slow 1s
+		--slow 1s \
+		--timeout 5s
 
 .PHONY: clean test

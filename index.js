@@ -100,6 +100,8 @@ Queue.prototype.exec = function(job){
       var err = new Error('Timeout of ' + timeout + 'ms exceeded');
       err.timeout = timeout;
       cb && cb(err);
+      self.pending--;
+      self.run();
     }, timeout);
   }
 

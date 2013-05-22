@@ -15,4 +15,26 @@ describe('Queue .timeout', function(){
       done();
     });
   })
+
+  it('should run subsequent jobs', function(done){
+    var q = new Queue({ timeout: 200 });
+    var calls = [];
+
+    var n = 0;
+    for (var i = 0; i < 5; i++) {
+      (function(n){
+        q.push(function(done){
+          setTimeout(function(){
+            calls.push(n);
+            done();
+          }, 250);
+        });
+      })(i);
+    }
+
+    q.push(function(){
+      calls.should.eql([0,1,2,3]);
+      done();
+    });
+  })
 })
