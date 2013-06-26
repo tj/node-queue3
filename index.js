@@ -59,8 +59,6 @@ Queue.prototype.__defineGetter__('length', function(){
 
 Queue.prototype.push = function(fn, cb){
   debug('enqueue');
-  var ms = this.timeout;
-  if (ms) fn = timeout(fn, ms);
   this.jobs.push([fn, cb]);
   process.nextTick(this.run.bind(this));
 };
@@ -88,10 +86,13 @@ Queue.prototype.run = function(){
 
 Queue.prototype.exec = function(job){
   var self = this;
+  var ms = this.timeout;
 
   debug('process');
   var fn = job[0];
   var cb = job[1];
+
+  if (ms) fn = timeout(fn, ms);
 
   this.pending++;
   fn(function(err, res){
