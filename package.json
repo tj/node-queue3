@@ -8,5 +8,9 @@
   },
   "dependencies": {
     "debug": "~0.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/visionmedia/node-queue3.git"
   }
 }
