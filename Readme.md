@@ -28,7 +28,7 @@ var urls = [
 urls.forEach(function(url){
   q.push(function(fn){
     console.log('%s', url);
-    request.get(url, function(res){
+    request.get(url).then(function(res){
       console.log('%s -> %s', url, res.status);
       fn();
     });

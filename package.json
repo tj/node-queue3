@@ -1,16 +1,19 @@
 {
   "name": "queue3",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "devDependencies": {
-    "should": "~1.2.2",
-    "mocha": "~1.9.0",
-    "superagent": "~0.14.2"
+    "superagent": "^4.1.0",
+    "tape": "^4.9.2"
   },
   "dependencies": {
-    "debug": "~0.7.2"
+    "debug": "^4.1.1"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/visionmedia/node-queue3.git"
-  }
+  },
+  "license": "MIT"
 }
